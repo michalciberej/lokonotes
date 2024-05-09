@@ -1,5 +1,14 @@
+import { Content, RootLayout, Sidebar, NoteList } from './components'
+
 const App = (): JSX.Element => {
-  return <div className="text-red-400">Loko Notes</div>
+  return (
+    <RootLayout>
+      <Sidebar>
+        <NoteList />
+      </Sidebar>
+      <Content />
+    </RootLayout>
+  )
 }
 
 export default App
