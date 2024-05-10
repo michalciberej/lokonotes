@@ -11,4 +11,22 @@
   body {
     @apply h-full select-none font-mono antialiased overflow-hidden text-white;
   }
+
+  h1 {
+    @apply text-3xl font-bold;
+  }
+  h2 {
+    @apply text-2xl font-bold;
+  }
+  h3 {
+    @apply text-xl font-bold;
+  }
+
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-neutral-500 rounded-md;
+  }
 }
