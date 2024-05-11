@@ -5,6 +5,7 @@ import { ensureDir, readdir, readFile, remove, stat, writeFile } from 'fs-extra'
 import { dialog } from 'electron'
 import type { DeleteNote, ReadNote, CreateNote, GetNotes, WriteNote } from '@shared/types'
 import { isEmpty } from 'lodash'
+import firstNoteFile from '../../../resources/firstNote.md?asset'
 
 export const getRootDir = (): string => {
   return `${homedir()}/${dirName}`
@@ -70,19 +71,26 @@ export const getNotes: GetNotes = async () => {
 
   await ensureDir(rootDir)
 
-  console.log(rootDir)
-
   const notesNames = await readdir(rootDir, { encoding: fileEncoding, withFileTypes: false })
 
   const notes = notesNames.filter((noteName) => noteName.endsWith('.mdx'))
 
-  if (isEmpty(notes)) return null
+  if (isEmpty(notes)) {
+    const newFileContent = await readFile(firstNoteFile, { encoding: fileEncoding })
+
+    await writeFile(`${rootDir}/${'First Note.mdx'}`, newFileContent, { encoding: fileEncoding })
+
+    notes.push('First Note.mdx')
+  }
 
   return Promise.all(
     notes.map(async (fileName) => {
       const fileData = await stat(`${rootDir}/${fileName}`)
+      const content = await readFile(`${rootDir}/${fileName}`, {
+        encoding: fileEncoding
+      })
 
-      return { title: fileName.replace('.mdx', ''), lastUpdate: fileData.mtimeMs }
+      return { title: fileName.replace('.mdx', ''), lastUpdate: fileData.mtime, content }
     })
   )
 }
@@ -90,5 +98,5 @@ export const getNotes: GetNotes = async () => {
 export const writeNote: WriteNote = async (fileName, dataToWrite) => {
   const rootDir = getRootDir()
 
-  return await writeFile(`${rootDir}/${fileName}`, dataToWrite, { encoding: fileEncoding })
+  return await writeFile(`${rootDir}/${fileName}.mdx`, dataToWrite, { encoding: fileEncoding })
 }
