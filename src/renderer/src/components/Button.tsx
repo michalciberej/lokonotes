@@ -9,7 +9,7 @@ export const Button = ({
   return (
     <button
       className={twMerge(
-        ' px-2 py-1 border border-neutral-700/70 rounded-md hover:bg-neutral-900/80 transition-colors',
+        'px-2 py-1 border border-neutral-500/50 rounded-md hover:border-neutral-500/90 transition-colors',
         className
       )}
       {...props}
